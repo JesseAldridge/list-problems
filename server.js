@@ -84,7 +84,7 @@ app.use(function(req, res, next) {
           is_error = true
           error_str = 'Please answer this question'
         }
-        else if(answer.length < 30) {
+        else if(answer.length < 19) {
           is_error = true
           error_str = 'Please write a longer answer'
         }
