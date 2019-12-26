@@ -26,7 +26,7 @@ const QUESTION_DATA = [
   {
     label: "2. Tell me about the last time you encountered this problem...",
     name: 'last_time',
-    placeholder: "This happened last..."
+    placeholder: "Last month I had to..."
   },
   {
     label: "3. Why was that hard?",
