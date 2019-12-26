@@ -1,0 +1,83 @@
+<link href="https://fonts.googleapis.com/css?family=Noto+Sans&display=swap" rel="stylesheet">
+
+<style type="text/css">
+  * {
+    font-family: 'Noto Sans';
+  }
+
+  label {
+    text-decoration: underline
+  }
+
+  label.first {
+    font-weight: bold;
+  }
+
+  .response {
+    border-top: solid 1px grey;
+    padding-top: 20px;
+    margin-top: 20px;
+  }
+
+  .response-text {
+    font-color: #222;
+    margin: 20px;
+    max-width: 500px;
+  }
+
+  .container {
+    width: 800px;
+  }
+</style>
+
+<h1>ListProblems.com</h1>
+
+<p>Thanks! Your response has been recorded.</p>
+
+<p>Here are the responses from everyone else:</p>
+
+{{#form_responses}}
+  <div class='response'>
+    <div>
+      <div>
+        <label class="first">Please describe a major problem you have:</label>
+      </div>
+      <div class='response-text'>{{problem}}</div>
+    </div>
+
+    <div>
+      <div>
+        <label for="x">1. What's the hardest part about doing this thing?</label>
+      </div>
+      <div class='response-text'>{{hardest}}</div>
+    </div>
+
+    <div>
+      <div>
+        <label>2. Tell me about the last time you encountered this problem...</label>
+      </div>
+      <div class='response-text'>{{last_time}}</div>
+    </div>
+
+    <div>
+      <div>
+        <label>3. Why was that hard?</label>
+      </div>
+      <div class='response-text'>{{why_hard}}</div>
+    </div>
+
+    <div>
+      <div>
+        <label>4. What, if anything, have you done to try and solve this problem?</label>
+      </div>
+      <div class='response-text'>{{what_done}}</div>
+    </div>
+
+    <div>
+      <div>
+        <label>5. What don't you love about the solutions that you've tried?</label>
+      </div>
+      <div class='response-text'>{{no_love}}</div>
+    </div>
+  </div>
+{{/form_responses}}

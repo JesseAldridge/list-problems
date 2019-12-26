@@ -1,0 +1,56 @@
+<link rel='stylesheet' href='https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css'>
+<link href="https://fonts.googleapis.com/css?family=Noto+Sans&display=swap" rel="stylesheet">
+
+<style type="text/css">
+  * {
+    font-family: 'Noto Sans';
+  }
+
+  h1 {
+    text-decoration: underline;
+  }
+
+  .container {
+    margin: 20px;
+  }
+
+  form {
+    margin-top:40px;
+  }
+
+  .question {
+    margin: 40px 0;
+  }
+
+  .error {
+    color: red;
+  }
+
+  textarea {
+    width:320px;
+    height:80px;
+  }
+</style>
+
+<div class='container'>
+  <h1>ListProblems.com</h1>
+
+  <form action="/submit-response" method="post">
+    {{#questions}}
+    <div class='question'>
+      <div>
+        <label>{{label}}</label>
+      </div>
+      {{#response_obj}}
+      {{#error_str}}
+      <div class='error'>Error: {{error_str}}</div>
+      {{/error_str}}
+      <textarea type="text" name="{{name}}"
+        placeholder="{{placeholder}}">{{response_str}}</textarea>
+      {{/response_obj}}
+    </div>
+    {{/questions}}
+
+    <button class='btn btn-primary'>Submit your response and view everyone else's.</button>
+  </form>
+</div>
