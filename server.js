@@ -94,6 +94,7 @@ app.use(function(req, res, next) {
       if(is_error)
         res.writeHead(302, {'Location': `/form`})
       else {
+        req.session.submitted_response = true
         form_responses.splice(0, 0, req.body)
         req.session.form_items = null
         fs.writeFileSync(RESPONSES_PATH, JSON.stringify(form_responses, null, 2))
@@ -124,7 +125,12 @@ app.use(function(req, res, next) {
       render_page(req, res, 'form', {form_items: req.session.form_items})
     }
     else if(url == '/responses') {
-      render_page(req, res, 'responses', {form_responses: form_responses})
+      if(req.session.submitted_response)
+        render_page(req, res, 'responses', {form_responses: form_responses})
+      else {
+        res.writeHead(302, {'Location': `/form`})
+        res.end()
+      }
     }
     else {
       // static file
