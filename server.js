@@ -62,8 +62,9 @@ function render_page(req, res, page, page_data) {
 // respond to all requests
 
 let form_responses = []
-if(fs.existsSync('form-responses.json')) {
-  const responses_json = fs.readFileSync('form-responses.json', 'utf8')
+const RESPONSES_PATH = expand_home_dir('~/list-problems.json')
+if(fs.existsSync(RESPONSES_PATH)) {
+  const responses_json = fs.readFileSync(RESPONSES_PATH, 'utf8')
   form_responses = JSON.parse(responses_json)
 }
 
@@ -96,7 +97,7 @@ app.use(function(req, res, next) {
         res.writeHead(302, {'Location': `/form`})
       else {
         form_responses.splice(0, 0, req.body)
-        fs.writeFileSync('form-responses.json', JSON.stringify(form_responses, null, 2))
+        fs.writeFileSync(RESPONSES_PATH, JSON.stringify(form_responses, null, 2))
         res.writeHead(302, {'Location': `/responses`})
       }
 
