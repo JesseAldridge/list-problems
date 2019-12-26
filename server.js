@@ -14,7 +14,7 @@ const PORT = (process.argv[2] ? parseInt(process.argv[2]) : 3010)
 
 const QUESTION_DATA = [
   {
-    label: "Please describe a major problem you have:",
+    label: "Please describe a problem you have:",
     name: 'problem',
     placeholder: "I don't like having to...",
   },
