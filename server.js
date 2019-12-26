@@ -8,9 +8,7 @@ const cookieSession = require('cookie-session')
 const lodash = require('lodash');
 const mustache = require('mustache');
 const serveStatic = require('serve-static');
-const shell = require('shelljs');
 const expand_home_dir = require('expand-home-dir')
-const glob = require('glob')
 
 const PORT = (process.argv[2] ? parseInt(process.argv[2]) : 3010)
 
