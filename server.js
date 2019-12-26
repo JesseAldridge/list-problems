@@ -12,7 +12,7 @@ const expand_home_dir = require('expand-home-dir')
 
 const PORT = (process.argv[2] ? parseInt(process.argv[2]) : 3010)
 
-const QUESTIONS = [
+const QUESTION_DATA = [
   {
     label: "Please describe a major problem you have:",
     name: 'problem',
@@ -75,28 +75,27 @@ app.use(function(req, res, next) {
 
   if(req.method == 'POST') {
     if(req.url == '/submit-response') {
-      req.session.response_objs = []
-      req.session.is_error = false
-      for(let i in QUESTIONS) {
-        const response_obj = {
-          response_str: req.body[QUESTIONS[i].name] || '',
-          error_str: null,
+      let is_error = false
+      for(let i in QUESTION_DATA) {
+        let answer = req.session.form_items[i].answer = (req.body[QUESTION_DATA[i].name] || '')
+
+        let error_str = null
+        if(answer.length == 0) {
+          is_error = true
+          error_str = 'Please answer this question'
         }
-        req.session.response_objs.push(response_obj)
-        if(response_obj.response_str.length == 0) {
-          req.session.is_error = true
-          response_obj.error_str = 'Please answer this question'
+        else if(answer.length < 30) {
+          is_error = true
+          error_str = 'Please write a longer answer'
         }
-        else if(response_obj.response_str.length < 30) {
-          req.session.is_error = true
-          response_obj.error_str = 'Please write a longer answer'
-        }
+        req.session.form_items[i].error_str = error_str
       }
 
-      if(req.session.is_error)
+      if(is_error)
         res.writeHead(302, {'Location': `/form`})
       else {
         form_responses.splice(0, 0, req.body)
+        req.session.form_items = null
         fs.writeFileSync(RESPONSES_PATH, JSON.stringify(form_responses, null, 2))
         res.writeHead(302, {'Location': `/responses`})
       }
@@ -112,12 +111,17 @@ app.use(function(req, res, next) {
     if(url == '/')
       render_page(req, res, 'index', {})
     else if(url == '/form') {
-      const questions = lodash.cloneDeep(QUESTIONS)
-      const response_objs = req.session.response_objs || []
-      for(let i = 0; i < response_objs.length; i++)
-        questions[i].response_obj = response_objs[i]
+      if(!req.session.form_items) {
+        req.session.form_items = []
+        const form_items = lodash.cloneDeep(QUESTION_DATA)
+        for(let i = 0; i < form_items.length; i++) {
+          req.session.form_items.push(form_items[i])
+          form_items[i].error_str = null
+          form_items[i].answer = null
+        }
+      }
 
-      render_page(req, res, 'form', {questions: questions})
+      render_page(req, res, 'form', {form_items: req.session.form_items})
     }
     else if(url == '/responses') {
       render_page(req, res, 'responses', {form_responses: form_responses})

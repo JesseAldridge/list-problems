@@ -36,20 +36,18 @@
   <h1>ListProblems.com</h1>
 
   <form action="/submit-response" method="post">
-    {{#questions}}
+    {{#form_items}}
     <div class='question'>
       <div>
         <label>{{label}}</label>
       </div>
-      {{#response_obj}}
       {{#error_str}}
       <div class='error'>Error: {{error_str}}</div>
       {{/error_str}}
       <textarea type="text" name="{{name}}"
-        placeholder="{{placeholder}}">{{response_str}}</textarea>
-      {{/response_obj}}
+        placeholder="{{placeholder}}">{{answer}}</textarea>
     </div>
-    {{/questions}}
+    {{/form_items}}
 
     <button class='btn btn-primary'>Submit your response and view everyone else's.</button>
   </form>
