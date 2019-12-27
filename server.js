@@ -10,40 +10,10 @@ const mustache = require('mustache');
 const serveStatic = require('serve-static');
 const expand_home_dir = require('expand-home-dir')
 
-const PORT = (process.argv[2] ? parseInt(process.argv[2]) : 3010)
+const config = require('config')
+const validate_response = require('_0_validate_response')
 
-const QUESTION_DATA = [
-  {
-    label: "Please describe a problem you have:",
-    name: 'problem',
-    placeholder: "I don't like having to...",
-  },
-  {
-    label: "1. What's the hardest part about doing this thing?",
-    name: 'hardest',
-    placeholder: "I have to deal with...",
-  },
-  {
-    label: "2. Tell me about the last time you encountered this problem...",
-    name: 'last_time',
-    placeholder: "Last month I had to..."
-  },
-  {
-    label: "3. Why was that hard?",
-    name: 'why_hard',
-    placeholder: "It was hard because..."
-  },
-  {
-    label: "4. What, if anything, have you done to try and solve this problem?",
-    name: 'what_done',
-    placeholder: "I tried using..."
-  },
-  {
-    label: "5. What don't you love about the solutions that you've tried?",
-    name: 'no_love',
-    placeholder: "I don't like the way..."
-  },
-]
+const PORT = (process.argv[2] ? parseInt(process.argv[2]) : 3010)
 
 
 const app = connect();
@@ -68,18 +38,6 @@ if(fs.existsSync(RESPONSES_PATH)) {
   form_responses = JSON.parse(responses_json)
 }
 
-function tokenize_words(text) {
-  const re = /([A-Za-z'&]+)/g
-  let m = null;
-  const tokens = []
-  do {
-    m = re.exec(text)
-    if(m)
-      tokens.push(m[0].toLowerCase())
-  } while(m)
-  return tokens
-}
-
 app.use(function(req, res, next) {
   const ip_address = req.connection.remoteAddress
   console.log(`${new Date().toUTCString()} request from: ${ip_address}, ${req.url}`)
@@ -87,27 +45,7 @@ app.use(function(req, res, next) {
 
   if(req.method == 'POST') {
     if(req.url == '/submit-response') {
-      let is_error = false
-      for(let i in QUESTION_DATA) {
-        let answer = req.session.form_items[i].answer = (req.body[QUESTION_DATA[i].name] || '')
-        answer = answer.trim()
-
-        let error_str = null
-        if(answer.length == 0) {
-          is_error = true
-          error_str = 'Error: Please answer this question'
-        }
-        else if(answer.length < 19) {
-          is_error = true
-          error_str = 'Error: Please write an actual answer'
-        }
-        else if(tokenize_words(answer).length < 5) {
-          is_error = true
-          error_str = 'Would you please just take two minutes to write a proper response?';
-        }
-        req.session.form_items[i].error_str = error_str
-      }
-
+      const is_error = validate_response.validate_response(req)
       if(is_error)
         res.writeHead(302, {'Location': `/form`})
       else {
@@ -131,7 +69,7 @@ app.use(function(req, res, next) {
     else if(url == '/form') {
       if(!req.session.form_items) {
         req.session.form_items = []
-        const form_items = lodash.cloneDeep(QUESTION_DATA)
+        const form_items = lodash.cloneDeep(config.QUESTION_DATA)
         for(let i = 0; i < form_items.length; i++) {
           req.session.form_items.push(form_items[i])
           form_items[i].error_str = null
