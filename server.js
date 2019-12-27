@@ -78,6 +78,7 @@ app.use(function(req, res, next) {
       let is_error = false
       for(let i in QUESTION_DATA) {
         let answer = req.session.form_items[i].answer = (req.body[QUESTION_DATA[i].name] || '')
+        answer = answer.trim()
 
         let error_str = null
         if(answer.length == 0) {
