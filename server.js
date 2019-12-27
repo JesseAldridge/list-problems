@@ -87,13 +87,13 @@ app.use(function(req, res, next) {
         }
         else if(answer.length < 19) {
           is_error = true
-          error_str = 'Please write a longer answer'
+          error_str = 'Please write an actual answer'
         }
         else if(answer.split(' ').length < 5) {
           is_error = true
           error_str = (
-            'Would you please just take two minutes to write an actual response instead of ' +
-            'trying to break my validator?'
+            'Would you please just take two minutes to write a response instead of trying to ' +
+            'break my validator?'
           );
         }
         req.session.form_items[i].error_str = error_str
