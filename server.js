@@ -68,6 +68,18 @@ if(fs.existsSync(RESPONSES_PATH)) {
   form_responses = JSON.parse(responses_json)
 }
 
+function tokenize_words(text) {
+  const re = /([A-Za-z'&]+)/g
+  let m = null;
+  const tokens = []
+  do {
+    m = re.exec(text)
+    if(m)
+      tokens.push(m[0].toLowerCase())
+  } while(m)
+  return tokens
+}
+
 app.use(function(req, res, next) {
   const ip_address = req.connection.remoteAddress
   console.log(`${new Date().toUTCString()} request from: ${ip_address}, ${req.url}`)
@@ -83,16 +95,16 @@ app.use(function(req, res, next) {
         let error_str = null
         if(answer.length == 0) {
           is_error = true
-          error_str = 'Please answer this question'
+          error_str = 'Error: Please answer this question'
         }
         else if(answer.length < 19) {
           is_error = true
-          error_str = 'Please write an actual answer'
+          error_str = 'Error: Please write an actual answer'
         }
-        else if(answer.split(' ').length < 5) {
+        else if(tokenize_words(answer).length < 5) {
           is_error = true
           error_str = (
-            'Would you please just take two minutes to write a response instead of trying to ' +
+            'Would you please just take two minutes to write a real response instead of trying ' +
             'break my validator?'
           );
         }
