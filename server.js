@@ -10,8 +10,8 @@ const mustache = require('mustache');
 const serveStatic = require('serve-static');
 const expand_home_dir = require('expand-home-dir')
 
-const config = require('config')
-const validate_response = require('_0_validate_response')
+const config = require('./config')
+const validate_response = require('./_0_validate_response')
 
 const PORT = (process.argv[2] ? parseInt(process.argv[2]) : 3010)
 
