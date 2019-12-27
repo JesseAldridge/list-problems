@@ -103,10 +103,7 @@ app.use(function(req, res, next) {
         }
         else if(tokenize_words(answer).length < 5) {
           is_error = true
-          error_str = (
-            'Would you please just take two minutes to write a real response instead of trying ' +
-            'break my validator?'
-          );
+          error_str = 'Would you please just take two minutes to write a proper response?';
         }
         req.session.form_items[i].error_str = error_str
       }
